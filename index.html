@@ -31,7 +31,7 @@
   --okbg:#22332A; --warnbg:#3A2F1A; --badbg:#3D2421; --nabg:#2A3237; --doubt:#7FB0CC; --doubtbg:#1F3340;
 }
 *,*::before,*::after{box-sizing:inherit}
-html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 120px);-webkit-text-size-adjust:100%}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 64px);-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 "Barlow",system-ui,-apple-system,"Segoe UI",sans-serif}
 h1,h2,h3{font-family:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;line-height:1.15;margin:0}
 button,input,textarea{font:inherit;color:inherit}
@@ -46,20 +46,22 @@ header p{margin:6px 0 0;color:var(--muted);max-width:60ch}
 .kit strong{font-weight:600}
 
 /* sticky tile progress */
-.roof{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--bg);padding:10px 0 8px;border-bottom:1px solid var(--line)}
-.tiles{display:flex;flex-direction:column;gap:3px;overflow:hidden}
-.course{display:flex;gap:3px}
-.course.off{margin-left:-9px}
-.tile{flex:0 0 18px;height:12px;border-radius:1px 1px 3px 3px;background:var(--empty);border:0;padding:0;cursor:pointer}
+.roof{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--bg);padding:6px 0;border-bottom:1px solid var(--line)}
+.tiles{display:flex;gap:1px;height:9px}
+.tile{flex:1 1 0;min-width:0;height:9px;border-radius:1px 1px 2px 2px;background:var(--empty);border:0;padding:0;cursor:pointer}
 .tile[data-s="ok"]{background:var(--ok)}
 .tile[data-s="warn"]{background:var(--warn)}
 .tile[data-s="bad"]{background:var(--bad)}
 .tile[data-s="na"]{background:var(--na)}
 .tile[data-s="num"]{background:var(--tile2)}
 .tile[data-s="doubt"]{background:var(--doubt)}
-.progress-line{display:flex;justify-content:space-between;align-items:baseline;margin-top:8px;font-size:.9rem;color:var(--muted)}
+.progress-line{display:flex;align-items:center;gap:10px;margin-top:5px;font-size:.85rem;color:var(--muted);white-space:nowrap}
+#alerts{color:var(--bad);font-weight:600}
+.navtoggle{flex:0 0 auto;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:14px;padding:3px 12px;font-size:.85rem;cursor:pointer}
+.navtoggle[aria-expanded="true"]{border-color:var(--sky)}
 .progress-line b{color:var(--ink);font-weight:600}
-.nav{display:flex;gap:6px;overflow-x:auto;margin-top:8px;padding-bottom:2px;scrollbar-width:none}
+.nav{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;max-height:45vh;overflow-y:auto}
+.nav[hidden]{display:none}
 .nav::-webkit-scrollbar{display:none}
 .nav a{flex:0 0 auto;font-size:.85rem;padding:4px 10px;border-radius:14px;border:1px solid var(--line);color:var(--ink);text-decoration:none;background:var(--paper)}
 
@@ -111,7 +113,7 @@ textarea{display:block;width:100%;margin-top:8px;min-height:70px;padding:10px;bo
 .viewer p{color:#cfd6da;margin:0 0 8px;font-size:.95rem}
 .phcount{color:var(--tile);font-weight:600}
 
-.budgetline{margin-top:4px;font-size:.92rem}
+.budgetline{flex:1;min-width:0;text-align:right;overflow:hidden;text-overflow:ellipsis}
 .budgetline b{color:var(--tile);font-weight:600}
 .budgetline span{color:var(--muted)}
 .theme{padding:14px 14px 12px;margin:10px 0;background:var(--paper);border-left:5px solid var(--c);border-radius:0 6px 6px 0}
@@ -129,6 +131,7 @@ textarea{display:block;width:100%;margin-top:8px;min-height:70px;padding:10px;bo
 .rules ul{margin:6px 0 0;padding-left:20px}
 .rules li{margin:4px 0}
 .clearbtn{color:var(--muted)}
+.saved{display:block;margin-top:6px;color:var(--ok);font-weight:500}
 .phhint{margin:6px 0 0;font-size:.92rem;color:var(--tile)}
 .confidence{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
 .confidence div{flex:1 1 120px;padding:10px 12px;background:var(--paper);border-top:4px solid var(--c)}
@@ -169,7 +172,7 @@ textarea{display:block;width:100%;margin-top:8px;min-height:70px;padding:10px;bo
   <header>
     <h1>78 boulevard Mauger</h1>
     <p>Ta grille de visite pour la maison de Deauville : 168 m², terrain de 572 m², dépendance de 37 m², DPE F, toiture et façades en tuiles. Réponds au fil de la visite, puis génère le compte rendu.</p>
-    <div class="kit"><strong>Ton matériel :</strong> le télémètre et ton téléphone (lampe torche, appareil photo avec zoom, appli Mesure ou niveau à bulle). Ajoute une photo à chaque point douteux, directement depuis l’appareil photo. Tes réponses, notes et photos restent sur ce téléphone, même si tu fermes la page, et tu pourras tout exporter dans un seul dossier à envoyer aux professionnels.</div>
+    <div class="kit"><strong>Ton matériel :</strong> le télémètre et ton téléphone (lampe torche, appareil photo avec zoom, appli Mesure ou niveau à bulle). Ajoute une photo à chaque point douteux, directement depuis l’appareil photo. Tes réponses, notes et photos restent sur ce téléphone, même si tu fermes la page, et tu pourras tout exporter dans un seul dossier à envoyer aux professionnels.<span class="saved" id="savedAt">Chaque réponse, note et photo est enregistrée automatiquement sur ce téléphone.</span></div>
     <div class="rules"><h2>Tu n’as pas besoin d’être un professionnel</h2><ul>
       <li>Ton rôle n’est pas de diagnostiquer, mais de <strong>repérer et photographier</strong>. Le diagnostic, c’est le travail du couvreur ou de l’architecte pendant la visite technique.</li>
       <li>Chaque point t’explique quoi regarder et à quoi ressemble un bon résultat. Compare simplement ce que tu vois avec cette description.</li>
@@ -183,9 +186,8 @@ textarea{display:block;width:100%;margin-top:8px;min-height:70px;padding:10px;bo
 <div class="roof">
   <div class="wrap">
     <div class="tiles" id="tiles" aria-label="Avancement de la visite"></div>
-    <div class="progress-line"><span><b id="count">0</b> points renseignés sur <span id="total">0</span></span><span id="alerts"></span></div>
-    <div class="budgetline" id="budgetLine"></div>
-    <nav class="nav" id="nav" aria-label="Parties de la visite"></nav>
+    <div class="progress-line"><span><b id="count">0</b>/<span id="total">0</span> vus<span id="alerts"></span></span><span class="budgetline" id="budgetLine"></span><button type="button" class="navtoggle" id="navToggle" aria-expanded="false" aria-controls="nav">Parties</button></div>
+    <nav class="nav" id="nav" aria-label="Parties de la visite" hidden></nav>
   </div>
 </div>
 
@@ -193,8 +195,8 @@ textarea{display:block;width:100%;margin-top:8px;min-height:70px;padding:10px;bo
 
 <div class="wrap"><section class="sec" id="sec-budget"><h2>Budget travaux par thème</h2><p class="intro">Il se met à jour à chaque réponse. Chaque thème t’explique en clair ce que tu as vu, ce que ça implique et à qui t’adresser. Les montants incluent le matériel et la main-d’œuvre ; le total ajoute 20 % pour l’architecte et les imprévus.</p><div id="budgetList"></div></section></div>
 
-<div class="wrap"><section class="sec" id="sec-reset"><h2>Recommencer une visite</h2><p class="intro">Pour corriger une réponse, il suffit de toucher une autre option ou « Annuler ma réponse » sous le point concerné. Ce bouton-ci sert uniquement à repartir de zéro pour visiter une autre maison. Par sécurité, il te demande de taper un mot, et tu peux restaurer la visite effacée juste après.</p>
-<div class="actions" style="margin-top:12px"><button class="btn ghost" id="resetBtn" type="button">Tout effacer pour une nouvelle visite</button><button class="btn" id="restoreBtn" type="button" hidden>Restaurer la visite effacée</button></div></section></div>
+<div class="wrap"><section class="sec" id="sec-reset"><h2>Remettre le formulaire à zéro</h2><p class="intro">Pour corriger une réponse, il suffit de toucher une autre option ou « Annuler ma réponse » sous le point concerné. Ce bouton-ci sert uniquement à repartir de zéro pour visiter une autre maison. Il supprime définitivement tes réponses, tes notes et tes photos, après deux confirmations : une fenêtre d’avertissement, puis le mot EFFACER à taper. Exporte ton PDF avant.</p>
+<div class="actions" style="margin-top:12px"><button class="btn ghost" id="resetBtn" type="button">Remettre le formulaire à zéro</button></div></section></div>
 
 <div class="bar">
   <div class="wrap">
@@ -740,7 +742,8 @@ function renderBudget(){
   var TC = themeCalc(), el = document.getElementById("budgetList");
   var bl = document.getElementById("budgetLine");
   if(bl){
-    bl.innerHTML = 'Travaux estimés : <b>'+(TC.hi ? eur(TC.lo*1.2)+' à '+eur(TC.hi*1.2) : "0 €")+'</b>'+(TC.unkHi ? ' <span>+ jusqu’à '+eur(TC.unkHi*1.2)+' sur ce qui reste à vérifier</span>' : '');
+    bl.innerHTML = 'Travaux <b>'+(TC.hi ? Math.round(TC.lo*1.2/1000).toLocaleString("fr-FR")+' à '+eur(TC.hi*1.2) : "0 €")+'</b>';
+    bl.title = TC.unkHi ? "Plus jusqu’à "+eur(TC.unkHi*1.2)+" sur ce qui reste à vérifier" : "";
   }
   if(!el) return;
   var h = '';
@@ -764,7 +767,16 @@ function renderBudget(){
 var KEY = "mauger78-visite-v1";
 var state = {a:{}, n:{}};
 function load(){ try{ var r = localStorage.getItem(KEY); if(r){ var p = JSON.parse(r); if(p && p.a){ state = {a:p.a||{}, n:p.n||{}}; } } }catch(e){} }
-function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+var saveWarned = false;
+function save(){
+  try{ localStorage.setItem(KEY, JSON.stringify(state)); markSaved(); }
+  catch(e){ if(!saveWarned){ saveWarned = true; toast("Enregistrement impossible : la mémoire du navigateur est pleine ou bloquée"); } }
+}
+function markSaved(){
+  var el = document.getElementById("savedAt"); if(!el) return;
+  var d = new Date();
+  el.textContent = "Enregistré automatiquement sur ce téléphone à " + String(d.getHours()).padStart(2,"0") + " h " + String(d.getMinutes()).padStart(2,"0") + ".";
+}
 
 /* ---------- Utilitaires ---------- */
 function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]; }); }
@@ -873,22 +885,22 @@ function closeViewer(){ document.getElementById("viewer").hidden = true; viewing
 /* Téléchargement : capacité Claude si disponible, sinon partage natif ou lien classique */
 var downloadsNs = null;
 try{ if(window.claude && typeof window.claude.use === "function"){ window.claude.use("downloads").then(function(ns){ downloadsNs = ns; }, function(){}); } }catch(e){}
-function saveFile(filename, blob){
+function saveFile(filename, blob, mime){
   if(downloadsNs){
-    return downloadsNs.save({filename:filename, data:blob}).then(function(){ toast("Dossier enregistré"); }, function(err){
+    return downloadsNs.save({filename:filename, data:blob}).then(function(){ toast("Fichier enregistré"); }, function(err){
       if(err && err.code==="declined") return;
       toast("Enregistrement impossible ici");
     });
   }
   var file = null;
-  try{ file = new File([blob], filename, {type:"text/html"}); }catch(e){}
+  try{ file = new File([blob], filename, {type: mime || blob.type || "application/octet-stream"}); }catch(e){}
   if(file && navigator.canShare && navigator.canShare({files:[file]})){
     return navigator.share({files:[file], title:"Visite du 78 bd Mauger"}).catch(function(){});
   }
   try{
     var a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = filename;
     document.body.appendChild(a); a.click(); setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 1500);
-    toast("Dossier téléchargé");
+    toast("Fichier téléchargé");
   }catch(e){ toast("Téléchargement impossible sur ce navigateur"); }
   return Promise.resolve();
 }
@@ -939,21 +951,16 @@ function renderForm(){
 /* ---------- Tuiles d'avancement ---------- */
 var tilesEl = document.getElementById("tiles");
 function renderTiles(){
-  var per = Math.max(10, Math.floor((tilesEl.clientWidth || 340) / 21));
-  var html = "", row = 0;
-  for(var i=0;i<Q.length;i+=per){
-    html += '<div class="course'+(row%2?" off":"")+'">';
-    Q.slice(i,i+per).forEach(function(q){
-      html += '<button type="button" class="tile" data-jump="'+q.id+'" data-s="'+sevOf(q)+'" title="'+esc(q.q)+'" aria-label="'+esc(q.q)+'"></button>';
-    });
-    html += '</div>'; row++;
-  }
+  var html = "";
+  Q.forEach(function(q){
+    html += '<button type="button" class="tile" data-jump="'+q.id+'" data-s="'+sevOf(q)+'" title="'+esc(q.q)+'" aria-label="'+esc(q.q)+'"></button>';
+  });
   tilesEl.innerHTML = html;
   var done = Q.filter(function(q){ return sevOf(q)!==""; }).length;
   document.getElementById("count").textContent = done;
   document.getElementById("total").textContent = Q.length;
   var bads = Q.filter(function(q){ return q.type!=="doc" && sevOf(q)==="bad"; }).length;
-  document.getElementById("alerts").textContent = bads ? (bads + (bads>1?" points rouges":" point rouge")) : "";
+  document.getElementById("alerts").textContent = bads ? (", " + bads + (bads>1?" rouges":" rouge")) : "";
   renderBudget();
   SECS.forEach(function(sec){
     var a = document.querySelector('[data-navsec="'+sec.id+'"]'); if(!a) return;
@@ -974,6 +981,8 @@ function refreshQ(id){
 /* ---------- Événements ---------- */
 document.addEventListener("click", function(e){
   var t = e.target.closest("button,a"); if(!t) return;
+  if(t.id==="navToggle"){ var nv = document.getElementById("nav"); nv.hidden = !nv.hidden; t.setAttribute("aria-expanded", String(!nv.hidden)); return; }
+  if(t.closest && t.closest("#nav")){ document.getElementById("nav").hidden = true; document.getElementById("navToggle").setAttribute("aria-expanded","false"); }
   if(t.classList.contains("opt")){
     var id = t.getAttribute("data-q"), i = Number(t.getAttribute("data-i"));
     if(state.a[id]===i){ delete state.a[id]; } else { state.a[id]=i; }
@@ -993,7 +1002,7 @@ document.addEventListener("click", function(e){
   }
   if(t.id==="viewerClose"){ closeViewer(); return; }
   if(t.id==="viewerDel"){
-    if(!viewing || !confirm("Supprimer cette photo ?")) return;
+    if(!viewing) return;
     var v = viewing;
     idbTx("readwrite", function(st){ return st.delete(v.id); }).then(function(){
       photos[v.qid] = (photos[v.qid]||[]).filter(function(p){ if(p.id===v.id){ URL.revokeObjectURL(p.url); return false; } return true; });
@@ -1032,33 +1041,23 @@ document.getElementById("nextBtn").addEventListener("click", function(){
   var todo = Q.filter(function(q){ return sevOf(q)===""; });
   if(!todo.length){ toast("Tout est renseigné : génère le compte rendu"); return; }
   var target = null;
-  for(var i=0;i<todo.length;i++){ var el = document.getElementById("q-"+todo[i].id); if(el && el.getBoundingClientRect().top > 160){ target = el; break; } }
+  for(var i=0;i<todo.length;i++){ var el = document.getElementById("q-"+todo[i].id); if(el && el.getBoundingClientRect().top > 80){ target = el; break; } }
   if(!target) target = document.getElementById("q-"+todo[0].id);
   target.scrollIntoView({behavior: (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) ? "auto":"smooth", block:"start"});
 });
-var BAKKEY = KEY + "-sauvegarde";
-function hasBackup(){ try{ return !!localStorage.getItem(BAKKEY); }catch(e){ return false; } }
-function syncRestore(){ var b = document.getElementById("restoreBtn"); if(b) b.hidden = !hasBackup(); }
 document.getElementById("resetBtn").addEventListener("click", function(){
-  var typed = prompt("Pour tout effacer, tape EFFACER en majuscules.\nTu pourras restaurer cette visite juste après.");
+  var n = totalPhotos();
+  if(!confirm("Première confirmation : tout effacer ?\n\nToutes tes réponses, tes notes et tes " + n + " photo" + (n>1?"s":"") + " seront supprimées définitivement de ce téléphone. Pense à exporter le PDF avant.")) return;
+  var typed = prompt("Deuxième confirmation : tape EFFACER en majuscules pour supprimer définitivement cette visite.");
   if(typed===null) return;
   if(typed.trim()!=="EFFACER"){ toast("Rien n’a été effacé"); return; }
-  getHidden().forEach(function(id){ idbTx("readwrite", function(st){ return st.delete(id); }); });
-  var ids = []; Object.keys(photos).forEach(function(k){ photos[k].forEach(function(p){ ids.push(p.id); URL.revokeObjectURL(p.url); }); });
-  setHidden(ids);
-  try{ localStorage.setItem(BAKKEY, JSON.stringify(state)); }catch(e){}
-  state = {a:{}, n:{}}; save(); photos = {};
-  renderForm(); renderTiles(); syncRestore();
-  document.getElementById("report").hidden = true; toast("Visite effacée, tu peux encore la restaurer");
+  Object.keys(photos).forEach(function(k){ photos[k].forEach(function(p){ URL.revokeObjectURL(p.url); }); });
+  photos = {}; idbTx("readwrite", function(st){ return st.clear(); });
+  state = {a:{}, n:{}}; save(); setHidden([]);
+  try{ localStorage.removeItem(KEY + "-sauvegarde"); }catch(e){}
+  renderForm(); renderTiles();
+  document.getElementById("report").hidden = true; toast("Visite effacée");
 });
-document.getElementById("restoreBtn").addEventListener("click", function(){
-  var raw = null; try{ raw = localStorage.getItem(BAKKEY); }catch(e){}
-  if(!raw) return;
-  try{ var b = JSON.parse(raw); state = {a:b.a||{}, n:b.n||{}}; }catch(e){ return; }
-  save(); setHidden([]); try{ localStorage.removeItem(BAKKEY); }catch(e){}
-  loadPhotos().then(function(){ renderForm(); renderTiles(); renderAllThumbs(); syncRestore(); toast("Visite restaurée"); });
-});
-syncRestore();
 var rt; window.addEventListener("resize", function(){ clearTimeout(rt); rt=setTimeout(renderTiles,150); });
 
 function toast(msg){ var el=document.getElementById("toast"); el.textContent=msg; el.classList.add("on"); setTimeout(function(){ el.classList.remove("on"); },2200); }
@@ -1156,6 +1155,7 @@ function buildReport(){
     proMap:proMap, coverage:coverage, unkHi:TC.unkHi*1.2, themes:TC.themes, doubts:doubts, vie:vie, unknownN:unknown.length+unanswered.length};
 }
 
+var lastReportCore = "", lastReportDate = "";
 function showReport(){
   var R = buildReport(), h = "";
   var date = new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
@@ -1257,23 +1257,24 @@ function showReport(){
   h += '<p style="margin-top:22px;color:var(--muted);font-size:.92rem">Les montants sont des ordres de grandeur pour une maison de cette taille sur la Côte Fleurie. Ils servent à te situer, pas à remplacer le chiffrage d’un professionnel.</p>';
   var core = h;
   var np = totalPhotos();
-  h += '<div class="actions"><button type="button" class="btn" id="exportBtn">Exporter le dossier'+(np?' avec '+np+' photo'+(np>1?'s':''):'')+'</button><button type="button" class="btn ghost" id="copyBtn">Copier le texte</button><button type="button" class="btn ghost" id="printBtn">Imprimer</button></div>';
-  h += '<p style="margin-top:10px;color:var(--muted);font-size:.92rem">Le dossier est un fichier unique qui s’ouvre dans n’importe quel navigateur, avec le compte rendu, toutes tes réponses, tes notes et tes photos classées par partie. Envoie-le au couvreur, à l’architecte ou à la banque par mail ou WeTransfer.</p>';
+  h += '<div class="actions"><button type="button" class="btn" id="pdfBtn">Exporter le compte rendu en PDF'+(np?' avec '+np+' photo'+(np>1?'s':''):'')+'</button><button type="button" class="btn ghost" id="zipBtn">Photos d’origine (ZIP)</button><button type="button" class="btn ghost" id="copyBtn">Copier le texte</button></div>';
+  h += '<p style="margin-top:10px;color:var(--muted);font-size:.92rem">Le PDF s’ouvre partout, sur téléphone comme sur ordinateur : compte rendu, budget, puis le détail de chaque point avec ta réponse, ta note et tes photos juste en dessous. C’est le fichier à envoyer au couvreur, à l’architecte ou à la banque. Le ZIP contient tes photos en meilleure qualité, rangées dans un dossier par partie, pour un professionnel qui veut zoomer.</p>';
 
   var el = document.getElementById("report");
   el.innerHTML = h; el.hidden = false;
-  document.getElementById("exportBtn").onclick = function(){ exportDossier(core, date); };
+  lastReportCore = core; lastReportDate = date;
+  document.getElementById("pdfBtn").onclick = function(){ exportPdf(this); };
+  document.getElementById("zipBtn").onclick = function(){ exportZip(this); };
   el.scrollIntoView({behavior: (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) ? "auto":"smooth"});
   var text = reportText(R, date);
   document.getElementById("copyBtn").onclick = function(){
     if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(function(){ toast("Compte rendu copié"); }, function(){ fallbackCopy(text); }); }
     else fallbackCopy(text);
   };
-  document.getElementById("printBtn").onclick = function(){ window.print(); };
 }
 
-function exportDossier(core, date){
-  var btn = document.getElementById("exportBtn"); var label = btn.textContent;
+function exportDossierHtml(btn){
+  var core = lastReportCore, date = lastReportDate; var label = btn.textContent;
   btn.disabled = true; btn.textContent = "Préparation du dossier…";
   var jobs = [];
   Object.keys(photos).forEach(function(qid){
@@ -1312,7 +1313,7 @@ function exportDossier(core, date){
       '</style></head><body>'+body+'</body></html>';
     var blob = new Blob([doc], {type:"text/html"});
     var d = new Date(), stamp = d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
-    return saveFile("dossier-visite-78-bd-mauger-"+stamp+".html", blob);
+    return saveFile("dossier-visite-78-bd-mauger-"+stamp+".html", blob, "text/html");
   }).then(function(){ btn.disabled = false; btn.textContent = label; }, function(){ btn.disabled = false; btn.textContent = label; toast("Export impossible"); });
 }
 function fallbackCopy(text){
@@ -1342,9 +1343,226 @@ function reportText(R, date){
   return t;
 }
 
+/* ---------- Export PDF (compte rendu + photos) et ZIP (photos d'origine) ---------- */
+var LIBS = {
+  pdf: "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js",
+  zip: "https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"
+};
+function loadScript(src){
+  return new Promise(function(res, rej){
+    var sc = document.createElement("script"); sc.src = src; sc.async = true;
+    sc.onload = function(){ res(); }; sc.onerror = function(){ rej(new Error("load")); };
+    document.head.appendChild(sc);
+  });
+}
+function imgForPdf(blob, max){
+  return new Promise(function(res){
+    var u = URL.createObjectURL(blob), im = new Image();
+    im.onload = function(){
+      var k = Math.min(1, max/Math.max(im.naturalWidth, im.naturalHeight));
+      var c = document.createElement("canvas"); c.width = Math.round(im.naturalWidth*k); c.height = Math.round(im.naturalHeight*k);
+      try{ c.getContext("2d").drawImage(im, 0, 0, c.width, c.height); res({data:c.toDataURL("image/jpeg", 0.72), w:c.width, h:c.height}); }
+      catch(e){ res(null); }
+      URL.revokeObjectURL(u);
+    };
+    im.onerror = function(){ URL.revokeObjectURL(u); res(null); };
+    im.src = u;
+  });
+}
+function stampDate(){ var d = new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function slug(s){ return String(s).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,48); }
+
+var PCOL = {ok:[79,122,74], warn:[185,128,26], bad:[174,58,45], na:[138,148,154], doubt:[61,111,142], num:[148,97,72], "":[200,200,200]};
+var INK = [34,50,59], MUTED = [94,107,114], TILEC = [122,78,59], SKYC = [47,74,90];
+
+function buildPdf(){
+  var R = buildReport();
+  var date = new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
+  var doc = new window.jspdf.jsPDF({unit:"mm", format:"a4"});
+  var M = 15, W = 180, PH = 297, y = M;
+  function T(s){ return String(s).replace(/[\u202F\u00A0\u2009]/g," ").replace(/\u2192/g,"->").replace(/\u00B2/g,"2").replace(/[\u2264]/g,"<=").replace(/[\u2265]/g,">="); }
+  function ensure(h){ if(y + h > PH - M){ doc.addPage(); y = M; } }
+  function color(c){ doc.setTextColor(c[0],c[1],c[2]); }
+  function para(s, o){
+    o = o || {}; var size = o.size || 10, ind = o.indent || 0, lh = size*0.43;
+    doc.setFont("helvetica", o.bold ? "bold" : "normal"); doc.setFontSize(size); color(o.color || INK);
+    doc.splitTextToSize(T(s), W - ind).forEach(function(l){ ensure(lh); doc.text(l, M + ind, y + lh*0.82); y += lh; });
+    y += (o.after === undefined ? 1.6 : o.after);
+  }
+  function h1(s){ para(s, {size:20, bold:true, color:TILEC, after:1}); }
+  function h2(s){ y += 4; ensure(16); para(s, {size:14, bold:true, color:SKYC, after:2}); }
+  function item(title, sub, col){
+    doc.setFont("helvetica","bold"); doc.setFontSize(10);
+    var l1 = doc.splitTextToSize(T(title), W - 5);
+    doc.setFont("helvetica","normal"); doc.setFontSize(9);
+    var l2 = sub ? doc.splitTextToSize(T(sub), W - 5) : [];
+    var h = l1.length*4.3 + l2.length*3.9 + 2;
+    ensure(h);
+    doc.setFillColor(col[0],col[1],col[2]); doc.rect(M, y, 1.4, h - 1, "F");
+    var yy = y;
+    doc.setFont("helvetica","bold"); doc.setFontSize(10); color(INK);
+    l1.forEach(function(l){ doc.text(l, M + 4, yy + 3.5); yy += 4.3; });
+    doc.setFont("helvetica","normal"); doc.setFontSize(9); color(MUTED);
+    l2.forEach(function(l){ doc.text(l, M + 4, yy + 3.2); yy += 3.9; });
+    y += h + 1.5;
+  }
+  function row(label, val, o){
+    o = o || {}; ensure(6.5);
+    doc.setFont("helvetica", o.bold ? "bold" : "normal"); doc.setFontSize(10); color(o.color || INK);
+    var lab = doc.splitTextToSize(T(label), W - 50)[0];
+    doc.text(lab, M, y + 4.3); doc.text(T(val), M + W, y + 4.3, {align:"right"});
+    doc.setDrawColor(217,222,223); doc.line(M, y + 6, M + W, y + 6);
+    y += 6.5;
+  }
+  var verdictCol = R.flags.length ? PCOL.bad : R.color.indexOf("ok")>-1 ? PCOL.ok : R.color.indexOf("warn")>-1 ? PCOL.warn : PCOL.bad;
+
+  /* En-tête */
+  h1("Visite du 78 boulevard Mauger, Deauville");
+  para("Compte rendu du " + date + ". Maison de 168 m² sur 572 m² de terrain, dépendance de 37 m², DPE F.", {color:MUTED, after:4});
+  doc.setFillColor(244,246,245); var vy = y;
+  doc.setFont("helvetica","normal"); doc.setFontSize(10);
+  var vlines = doc.splitTextToSize(T(R.msg), W - 8); var vh = 9 + vlines.length*4.3 + 3;
+  ensure(vh); doc.rect(M, y, W, vh, "F"); doc.setFillColor(verdictCol[0],verdictCol[1],verdictCol[2]); doc.rect(M, y, 2, vh, "F");
+  doc.setFont("helvetica","bold"); doc.setFontSize(14); color(verdictCol); doc.text(T(R.scen), M + 6, y + 7);
+  doc.setFont("helvetica","normal"); doc.setFontSize(10); color(INK);
+  var yy = y + 12; vlines.forEach(function(l){ doc.text(l, M + 6, yy); yy += 4.3; });
+  y += vh + 3;
+
+  var nVu = R.verts + R.oranges.length + R.reds.length;
+  h2("Ce que tu maîtrises");
+  var pl = function(n, a, b){ return n + " " + (n>1 ? b : a); };
+  para(pl(nVu,"point vu et tranché","points vus et tranchés") + ", " + pl(R.doubts.length,"doute à faire confirmer","doutes à faire confirmer") + ", " + pl(R.unknownN,"point non vérifié","points non vérifiés") + ". " + photoTotalText() + ".");
+
+  /* Budget */
+  h2("Budget travaux par thème");
+  R.themes.forEach(function(r){
+    row(r.n + " : " + STATUS[r.sev].toLowerCase(), r.sev==="na" ? "à vérifier" : (r.hi ? eur(r.lo)+" à "+eur(r.hi) : "0 €"), {color: r.sev==="ok"?INK:PCOL[r.sev]});
+  });
+  row("Architecte et imprévus (20 %)", eur(R.moeLo)+" à "+eur(R.moeHi));
+  row("Total des travaux identifiés", eur(R.totLo)+" à "+eur(R.totHi), {bold:true});
+  y += 2;
+  if(R.unkHi) para("À cela peut s’ajouter jusqu’à " + eur(R.unkHi) + " sur les points non vérifiés, si tout s’y révélait à refaire.");
+  para("Coût total du projet avec l’achat (950 000 € net vendeur, 40 000 € d’agence, environ 72 000 € de notaire) : " + eurFull(ACHAT+R.totLo) + " à " + eurFull(ACHAT+R.totHi) + (R.unkHi ? ", et jusqu’à " + eurFull(ACHAT+R.totHi+R.unkHi) + " dans le pire cas" : "") + ". Valeur estimée après rénovation : 1,5 à 1,9 M€.");
+  if(R.rows.length){
+    h2("Ce que ça veut dire, thème par thème");
+    R.rows.forEach(function(r){ item(r.n + " : " + STATUS[r.sev].toLowerCase(), r.t[r.sev] + " " + r.t.dec + " À consulter : " + r.t.pro + ".", PCOL[r.sev]); });
+  }
+
+  /* Bloquants, doutes, constats */
+  h2("Points bloquants");
+  if(R.flags.length){ R.flags.forEach(function(q){ item(q.q + " " + labelOf(q), secName(q.s) + ". À faire expertiser par : " + POSTES[q.p].pro + ", avant la promesse." + notePh(q), PCOL.bad); }); }
+  else para("Aucun signal grave sur la structure, la charpente ou l’humidité dans ce qui a été observé.", {color:MUTED});
+  if(R.doubts.length){
+    h2("Doutes à faire confirmer par un professionnel");
+    R.doubts.forEach(function(q){ item(q.q, secName(q.s) + ". À montrer à : " + (q.p ? POSTES[q.p].pro : "l’architecte") + "." + notePh(q), PCOL.doubt); });
+  }
+  var rest = R.reds.filter(function(q){ return !q.f; }).concat(R.oranges);
+  if(rest.length){
+    h2("Constats");
+    rest.forEach(function(q){ var s = sevOf(q); item(q.q + " " + labelOf(q), secName(q.s) + (q.p ? ". Poste : " + POSTES[q.p].n : "") + "." + notePh(q), PCOL[s]); });
+  }
+  if(R.mesures.length){
+    h2("Mesures");
+    R.mesures.forEach(function(m){ var c = m.c.indexOf("ok")>-1?PCOL.ok:m.c.indexOf("warn")>-1?PCOL.warn:m.c.indexOf("bad")>-1?PCOL.bad:PCOL.na; item(m.t, m.d, c); });
+  }
+  var pros = Object.keys(R.proMap);
+  if(pros.length){
+    h2("Points non vérifiés, et qui doit les vérifier");
+    pros.forEach(function(p){ item(p, R.proMap[p].map(function(q){ return q.q; }).join(" ; "), PCOL.na); });
+  }
+  if(R.aDemander.length || R.promis.length){
+    h2("À demander à l’agence");
+    R.aDemander.forEach(function(q){ item(q.q, q.why, PCOL.bad); });
+    R.promis.forEach(function(q){ item(q.q + " (promis, à relancer)", q.why, PCOL.warn); });
+  }
+
+  /* Détail + photos */
+  var jobs = [];
+  SECS.forEach(function(sec){
+    Q.filter(function(q){ return q.s===sec.id; }).forEach(function(q){
+      (photos[q.id]||[]).forEach(function(p){ jobs.push(imgForPdf(p.blob, 1200).then(function(info){ p.pdf = info; })); });
+    });
+  });
+  return Promise.all(jobs).then(function(){
+    doc.addPage(); y = M;
+    h1("Détail de la visite et photos");
+    para("Chaque point renseigné, avec la réponse, la note et les photos prises sur place.", {color:MUTED, after:3});
+    SECS.forEach(function(sec){
+      var items = Q.filter(function(q){ return q.s===sec.id && (sevOf(q)!=="" || state.n[q.id] || photoCount(q.id)); });
+      if(!items.length) return;
+      h2(sec.t);
+      items.forEach(function(q){
+        var s = sevOf(q);
+        var ans = q.type==="num" ? (numOf(q.id)!==null ? numOf(q.id).toLocaleString("fr-FR")+" "+q.unit : "") : labelOf(q);
+        item(q.q + (ans ? " : " + ans : ""), state.n[q.id] ? "Note : " + state.n[q.id] : "", PCOL[s] || PCOL[""]);
+        var ps = (photos[q.id]||[]).filter(function(p){ return p.pdf; });
+        var colW = (W - 4)/2, i = 0;
+        while(i < ps.length){
+          var pair = ps.slice(i, i+2), dims = pair.map(function(p){ var w = colW, h = w * p.pdf.h / p.pdf.w; if(h > 105){ h = 105; w = h * p.pdf.w / p.pdf.h; } return {w:w, h:h}; });
+          var rh = Math.max.apply(null, dims.map(function(d){ return d.h; })) + 6;
+          ensure(rh);
+          pair.forEach(function(p, j){
+            var x = M + j*(colW + 4);
+            try{ doc.addImage(p.pdf.data, "JPEG", x, y, dims[j].w, dims[j].h); }catch(e){}
+            doc.setFontSize(8); color(MUTED); doc.text(T("Photo " + (i+j+1) + " sur " + ps.length), x, y + dims[j].h + 3.6);
+          });
+          y += rh; i += 2;
+        }
+        if(ps.length) y += 2;
+      });
+    });
+    var pages = doc.getNumberOfPages();
+    for(var pg = 1; pg <= pages; pg++){
+      doc.setPage(pg); doc.setFont("helvetica","normal"); doc.setFontSize(8); color(MUTED);
+      doc.text(T("78 bd Mauger, Deauville. Compte rendu du " + date + ". Page " + pg + " sur " + pages), M, PH - 7);
+    }
+    return doc.output("blob");
+  });
+}
+function notePh(q){ var n = photoCount(q.id); return (state.n[q.id] ? " Note : " + state.n[q.id] + "." : "") + (n ? " " + n + " photo" + (n>1?"s":"") + " dans le détail." : ""); }
+function photoTotalText(){ var n = totalPhotos(); return n ? n + " photo" + (n>1?"s":"") + " jointe" + (n>1?"s":"") + " dans le détail de la visite" : "Aucune photo prise"; }
+
+function exportPdf(btn){
+  var label = btn.textContent; btn.disabled = true; btn.textContent = "Création du PDF…";
+  var done = function(){ btn.disabled = false; btn.textContent = label; };
+  var ready = (window.jspdf && window.jspdf.jsPDF) ? Promise.resolve() : loadScript(LIBS.pdf);
+  ready.then(buildPdf).then(function(blob){
+    return saveFile("compte-rendu-visite-78-bd-mauger-" + stampDate() + ".pdf", blob, "application/pdf");
+  }).then(done, function(){
+    done(); toast("PDF impossible sans connexion : export en page web à la place");
+    var R = buildReport(); exportDossierHtml(btn);
+  });
+}
+function exportZip(btn){
+  if(!totalPhotos()){ toast("Aucune photo à exporter"); return; }
+  var label = btn.textContent; btn.disabled = true; btn.textContent = "Préparation des photos…";
+  var done = function(){ btn.disabled = false; btn.textContent = label; };
+  var ready = window.JSZip ? Promise.resolve() : loadScript(LIBS.zip);
+  ready.then(function(){
+    var zip = new window.JSZip();
+    SECS.forEach(function(sec, si){
+      var folder = String(si+1).padStart(2,"0") + "-" + slug(sec.t);
+      Q.filter(function(q){ return q.s===sec.id; }).forEach(function(q){
+        (photos[q.id]||[]).forEach(function(p, i){ zip.file(folder + "/" + slug(q.q) + "-" + (i+1) + ".jpg", p.blob); });
+      });
+    });
+    var R = buildReport(), date = new Date().toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric"});
+    zip.file("compte-rendu.txt", reportText(R, date));
+    return zip.generateAsync({type:"blob"});
+  }).then(function(blob){
+    return saveFile("photos-visite-78-bd-mauger-" + stampDate() + ".zip", blob, "application/zip");
+  }).then(done, function(){ done(); toast("Export des photos impossible sans connexion"); });
+}
+
 /* ---------- Démarrage ---------- */
 load(); renderForm(); renderTiles();
-openIdb().then(function(db){ if(db) return loadPhotos().then(renderAllThumbs); });
+openIdb().then(function(db){
+  if(!db){ toast("Les photos ne pourront pas être enregistrées dans ce navigateur"); return; }
+  var hid = getHidden();
+  var purge = hid.length ? Promise.all(hid.map(function(id){ return idbTx("readwrite", function(st){ return st.delete(id); }); })).then(function(){ setHidden([]); }) : Promise.resolve();
+  return purge.then(loadPhotos).then(renderAllThumbs);
+});
+try{ if(navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(function(){}); }catch(e){}
 })();
 </script>
 </body>
